@@ -1,5 +1,5 @@
 import torch
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 
 def evaluate(model, data_loader, metrics, device):
@@ -8,7 +8,7 @@ def evaluate(model, data_loader, metrics, device):
 
     summary = {metric: 0 for metric in metrics}
 
-    for step, mb in tqdm(enumerate(data_loader), desc='steps', total=len(data_loader)):
+    for step, mb in tqdm(enumerate(data_loader), desc='Evaluating Steps: ', total=len(data_loader)):
         x_mb, y_mb = map(lambda elm: elm.to(device), mb)
 
         with torch.no_grad():

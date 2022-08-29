@@ -1,0 +1,5 @@
+tensorflow
+transformers
+torch
+numpy
+jupyter

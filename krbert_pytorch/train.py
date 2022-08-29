@@ -1,19 +1,19 @@
 import argparse
 import pickle
+import json
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from pathlib import Path
 from torch.utils.data import DataLoader
-from transformers.modeling_bert import BertConfig
 from pretrained.tokenization_ranked import FullTokenizer as KBertRankedTokenizer
-from transformers import BertTokenizer
+from transformers import BertTokenizer, BertConfig
 from model.net import SentenceClassifier
 from model.data import Corpus
 from model.utils import PreProcessor, PadSequence
 from model.metric import evaluate, acc
 from utils import Config, CheckpointManager, SummaryManager
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from torch.utils.tensorboard import SummaryWriter
 
 # for reproducibility
@@ -41,6 +41,8 @@ if __name__ == '__main__':
     ptr_config = Config(ptr_dir / 'config_{}.json'.format(args.pretrained_config))
     data_config = Config(data_dir / 'config.json')
     model_config = Config('finetuning_config.json')
+    with open(ptr_config.config, mode="r") as io :
+        bert_config = json.loads(io.read())
 
     # vocab
     vocab = pickle.load(open(ptr_config.vocab, mode='rb'))
@@ -56,7 +58,7 @@ if __name__ == '__main__':
     preprocessor = PreProcessor(vocab=vocab, split_fn=ptr_tokenizer.tokenize, pad_fn=pad_sequence, subchar=args.subchar)
 
     # model
-    config = BertConfig(ptr_config.config)
+    config = BertConfig(**bert_config)
     model = SentenceClassifier(config, num_classes=model_config.num_classes, vocab=preprocessor.vocab)
     bert_pretrained = torch.load(ptr_config.bert)
     model.load_state_dict(bert_pretrained, strict=False)
