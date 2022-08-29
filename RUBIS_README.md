@@ -1,6 +1,6 @@
 ## RUBIS_README
-RUBIS 연구실 UROP를 위한 KR-BERT repository입니다.
-
+RUBIS 연구실 UROP를 위한 KR-BERT repository입니다.
+학습이나 pretrained weight을 위한 설명은 `README.md`를 참고해주세요.
 
 ### Changelog
 - tensorflow 2.X 버전과의 호환을 위해 import 및 라인 몇줄이 수정되었습니다.
